@@ -4,7 +4,7 @@ PYTHON = $(BIN)/python3.4
 
 INSTALL = $(BIN)/pip install
 
-SYNCTO_FXA_USER_SALT = 0EvBb1DFqPkgrSruK8qYxeSE-FNMvwxBagbSSqq8w-v6gL7g
+SYNCTO_FXA_USER_SALT = 9aDdRQoLQBPsThVew-GZM_7PrJw_wf0skON0t4RjTDWewmu9
 
 .PHONY: all test build
 
@@ -20,8 +20,8 @@ init:
 	sed -i "s/SYNCTO_FXA_USER_SALT=[a-zA-Z0-9_-]*/SYNCTO_FXA_USER_SALT=`python -c 'import os, base64; print(base64.urlsafe_b64encode(os.urandom(36)))'`/g" syncto.json
 
 test: build
-	$(BIN)/flake8 loadtest.py
 	SYNCTO_FXA_USER_SALT=$(SYNCTO_FXA_USER_SALT) $(BIN)/ailoads -v -d 30
+	$(BIN)/flake8 loadtest.py
 
 clean:
 	rm -fr venv/ __pycache__/
