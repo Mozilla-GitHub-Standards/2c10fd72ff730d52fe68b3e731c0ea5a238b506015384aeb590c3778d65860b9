@@ -23,6 +23,9 @@ test: build
 	SYNCTO_FXA_USER_SALT=$(SYNCTO_FXA_USER_SALT) $(BIN)/ailoads -v -d 30
 	$(BIN)/flake8 loadtest.py
 
+test-heavy: build
+	SYNCTO_FXA_USER_SALT=$(SYNCTO_FXA_USER_SALT) $(BIN)/ailoads -v -d 30 -u 10
+
 clean:
 	rm -fr venv/ __pycache__/
 
