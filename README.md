@@ -6,10 +6,11 @@ Syncto loadtest based on ailoads
 ## How to run the loadtest?
 
     make test
-    
+
+
 ## How to run a longer loadtest with multiple users?
 
-make test-heavy
+    make test-heavy
 
 
 ## How to build the docker image?
