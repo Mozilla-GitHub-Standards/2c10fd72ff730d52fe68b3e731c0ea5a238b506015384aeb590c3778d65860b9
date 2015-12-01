@@ -24,7 +24,7 @@ test: build
 	$(BIN)/flake8 loadtest.py
 
 test-heavy: build
-	SYNCTO_FXA_USER_SALT=$(SYNCTO_FXA_USER_SALT) $(BIN)/ailoads -v -d 30 -u 10
+	SYNCTO_FXA_USER_SALT=$(SYNCTO_FXA_USER_SALT) $(BIN)/ailoads -v -d 300 -u 10
 
 clean:
 	rm -fr venv/ __pycache__/
@@ -33,4 +33,4 @@ docker-build:
 	docker build -t syncto/loadtest .
 
 docker-run:
-	docker run -e SYNCTO_DURATION=30 -e SYNCTO_NB_USERS=4 syncto/loadtest
+	docker run -e SYNCTO_DURATION=600 -e SYNCTO_NB_USERS=10 syncto/loadtest
