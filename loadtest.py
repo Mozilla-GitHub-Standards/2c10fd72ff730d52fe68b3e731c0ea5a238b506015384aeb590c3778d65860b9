@@ -2,13 +2,18 @@ import base64
 import hmac
 import os
 import random
+import threading
 import uuid
+
+from requests.exceptions import HTTPError
 
 from fxa import errors
 from fxa.core import Client
 from fxa.plugins.requests import FxABrowserIDAuth
 
 from ailoads.fmwk import scenario, requests
+
+lock = threading.RLock()
 
 # Read configuration from env
 SERVER_URL = os.getenv('SYNCTO_SERVER_URL',
@@ -44,10 +49,13 @@ class FXAUser(object):
         self.auth = self.get_auth()
 
     def get_auth(self):
-        global ACCOUNT_CREATED
+        with lock:
+            if ACCOUNT_CREATED:
+                return ACCOUNT_CREATED
+            return self.create_account()
 
-        if ACCOUNT_CREATED:
-            return ACCOUNT_CREATED
+    def create_account(self):
+        global ACCOUNT_CREATED
 
         # ONLY WORKS WITH FxA STAGE
 
