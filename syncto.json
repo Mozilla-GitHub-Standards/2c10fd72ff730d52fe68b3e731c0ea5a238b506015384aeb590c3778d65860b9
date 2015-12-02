@@ -18,8 +18,7 @@
             "SYNCTO_METRICS_STATSD_SERVER=$STATSD_HOST:$STATSD_PORT",
             "SYNCTO_SERVER_URL=https://syncto.stage.mozaws.net:443",
             "SYNCTO_NB_USERS=100",
-            "SYNCTO_DURATION=60",
-            "SYNCTO_FXA_USER_SALT=9aDdRQoLQBPsThVew-GZM_7PrJw_wf0skON0t4RjTDWewmu9"
+            "SYNCTO_DURATION=60"
           ],
           "dns_name": "testcluster.mozilla.org",
           "port_mapping": "8080:8090,8081:8081,3000:3000",

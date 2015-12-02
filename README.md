@@ -3,6 +3,17 @@
 Syncto loadtest based on ailoads
 
 
+## Generate your credentials
+
+### For stage
+
+   make setup_random
+
+### For production
+
+   make setup_existing -e SYNCTO_EXISTING_EMAIL=test-account-email@example.com
+
+
 ## How to run the loadtest?
 
     make test
