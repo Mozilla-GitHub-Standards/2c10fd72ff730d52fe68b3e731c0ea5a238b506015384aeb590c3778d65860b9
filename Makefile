@@ -21,7 +21,11 @@ build: $(PYTHON)
 
 loadtest.env:
 	fxa-client -c --browserid --audience https://token.stage.mozaws.net/ --prefix syncto --out loadtest.env
-setup_random: loadtest.env
+
+refresh:
+	@rm -f loadtest.env
+
+setup_random: refresh loadtest.env
 
 setup_existing:
 	fxa-client --browserid --auth "$(SYNCTO_EXISTING_EMAIL)" --account-server https://api.accounts.firefox.com/v1 --out loadtest.env
@@ -34,7 +38,7 @@ test: build loadtest.env
 test-heavy: build loadtest.env
 	bash -c "source loadtest.env && SYNCTO_SERVER_URL=$(SYNCTO_SERVER_URL) $(BIN)/ailoads -v -d 300 -u 10"
 
-clean:
+clean: refresh
 	rm -fr venv/ __pycache__/
 
 docker-build:
