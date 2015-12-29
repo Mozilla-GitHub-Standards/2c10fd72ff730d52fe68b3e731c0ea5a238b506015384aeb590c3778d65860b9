@@ -1,6 +1,6 @@
 #!/bin/bash
-source loadtest.env
-echo "Building syncto.json"
+source loadtest.env && \
+echo "Building syncto.json" && \
 cat > syncto.json <<EOF
 {
   "name": "Syncto Testing",
