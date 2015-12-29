@@ -53,8 +53,8 @@ class SynctoConnection(object):
             headers=self.headers)
 
 
-@scenario(100)
-def readonly_sync():
+@scenario(20)
+def readonly_crypto():
     """Syncing history from an existing account"""
     conn = get_connection('user1')
 
@@ -64,11 +64,23 @@ def readonly_sync():
     body = r.json()
     assert "data" in body
 
+
+@scenario(20)
+def readonly_meta():
+    """Syncing history from an existing account"""
+    conn = get_connection('user1')
+
     # 2. Connecting to get back the meta informations
     r = conn.get('/v1/buckets/syncto/collections/meta/records')
     r.raise_for_status()
     body = r.json()
     assert "data" in body
+
+
+@scenario(20)
+def readonly_bookmarks():
+    """Syncing history from an existing account"""
+    conn = get_connection('user1')
 
     # 3. Connecting to get the bookmarks (for TV)
     r = conn.get('/v1/buckets/syncto/collections/bookmarks/records')
@@ -76,18 +88,26 @@ def readonly_sync():
     body = r.json()
     assert "data" in body
 
+
+@scenario(20)
+def readonly_history():
+    """Syncing history from an existing account"""
+    conn = get_connection('user1')
+
     # 4. Connecting to get the history
     r = conn.get('/v1/buckets/syncto/collections/history/records')
     r.raise_for_status()
     body = r.json()
     assert "data" in body
 
+
+@scenario(20)
+def readonly_passwords():
+    """Syncing history from an existing account"""
+    conn = get_connection('user1')
+
     # 5. Connecting to get the passwords
     r = conn.get('/v1/buckets/syncto/collections/passwords/records')
     r.raise_for_status()
     body = r.json()
     assert "data" in body
-
-
-if __name__ == '__main__':
-    readonly_sync()
