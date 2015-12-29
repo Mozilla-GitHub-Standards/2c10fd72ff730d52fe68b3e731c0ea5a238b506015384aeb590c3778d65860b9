@@ -4,7 +4,6 @@ PYTHON = $(BIN)/python3.4
 
 INSTALL = $(BIN)/pip install
 
-SYNCTO_FXA_USER_SALT = 9aDdRQoLQBPsThVew-GZM_7PrJw_wf0skON0t4RjTDWewmu9
 SYNCTO_SERVER_URL = https://syncto.stage.mozaws.net:443
 SYNCTO_EXISTING_EMAIL =
 
@@ -20,7 +19,7 @@ $(PYTHON):
 build: $(PYTHON)
 
 loadtest.env:
-	fxa-client -c --browserid --audience https://token.stage.mozaws.net/ --prefix syncto --out loadtest.env
+	$(BIN)/fxa-client -c --browserid --audience https://token.stage.mozaws.net/ --prefix syncto --out loadtest.env
 
 refresh:
 	@rm -f loadtest.env
@@ -28,7 +27,7 @@ refresh:
 setup_random: refresh loadtest.env
 
 setup_existing:
-	fxa-client --browserid --auth "$(SYNCTO_EXISTING_EMAIL)" --account-server https://api.accounts.firefox.com/v1 --out loadtest.env
+	$(BIN)/fxa-client --browserid --auth "$(SYNCTO_EXISTING_EMAIL)" --account-server https://api.accounts.firefox.com/v1 --out loadtest.env
 
 
 test: build loadtest.env
