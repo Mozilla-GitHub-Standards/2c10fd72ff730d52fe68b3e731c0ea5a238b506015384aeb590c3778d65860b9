@@ -1,3 +1,7 @@
+#!/bin/bash
+source loadtest.env
+echo "Building syncto.json"
+cat > syncto.json <<EOF
 {
   "name": "Syncto Testing",
   "plans": [
@@ -15,17 +19,20 @@
           "container_name": "syncto/loadtest",
           "container_url": "https://s3.amazonaws.com/loads-docker-images/syncto/loadtest.tar.bz2",
           "environment_data": [
-            "SYNCTO_METRICS_STATSD_SERVER=$STATSD_HOST:$STATSD_PORT",
+            "SYNCTO_METRICS_STATSD_SERVER=\$STATSD_HOST:\$STATSD_PORT",
             "SYNCTO_SERVER_URL=https://syncto.stage.mozaws.net:443",
             "SYNCTO_NB_USERS=100",
-            "SYNCTO_DURATION=60"
+            "SYNCTO_DURATION=60",
+            "FXA_BROWSERID_ASSERTION=${FXA_BROWSERID_ASSERTION}",
+            "FXA_CLIENT_STATE=${FXA_CLIENT_STATE}"
           ],
           "dns_name": "testcluster.mozilla.org",
           "port_mapping": "8080:8090,8081:8081,3000:3000",
-          "volume_mapping": "/var/log:/var/log/$RUN_ID:rw",
+          "volume_mapping": "/var/log:/var/log/\$RUN_ID:rw",
           "docker_series": "syncto"
         }
       ]
     }
   ]
 }
+EOF

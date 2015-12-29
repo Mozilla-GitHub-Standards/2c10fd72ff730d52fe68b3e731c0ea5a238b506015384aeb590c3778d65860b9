@@ -34,7 +34,6 @@ class SynctoConnection(object):
             "Authorization": "BrowserID %s" % FXA_BROWSERID_ASSERTION,
             "X-Client-State": FXA_CLIENT_STATE
         }
-        self.authenticated = False
         self.timeout = 2
 
     def get(self, endpoint):
