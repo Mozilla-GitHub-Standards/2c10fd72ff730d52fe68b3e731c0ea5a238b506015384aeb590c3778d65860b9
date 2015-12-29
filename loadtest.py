@@ -35,22 +35,26 @@ class SynctoConnection(object):
             "X-Client-State": FXA_CLIENT_STATE
         }
         self.authenticated = False
+        self.timeout = 2
 
     def get(self, endpoint):
         return requests.get(
             SERVER_URL + endpoint,
-            headers=self.headers)
+            headers=self.headers,
+            timeout=self.timeout)
 
     def put(self, endpoint, data):
         return requests.put(
             SERVER_URL + endpoint,
             json=data,
-            headers=self.headers)
+            headers=self.headers,
+            timeout=self.timeout)
 
     def delete(self, endpoint):
         return requests.delete(
             SERVER_URL + endpoint,
-            headers=self.headers)
+            headers=self.headers,
+            timeout=self.timeout)
 
 
 @scenario(20)
