@@ -19,4 +19,4 @@ RUN git clone https://github.com/mozilla-services/ailoads-syncto /home/syncto/ai
 RUN cd /home/syncto/ailoads-syncto; make build
 
 # run the test
-CMD cd /home/syncto/ailoads-syncto; bin/ailoads -v -d $SYNCTO_DURATION -u $SYNCTO_NB_USERS
+CMD cd /home/syncto/ailoads-syncto; venv/bin/ailoads -v -d $SYNCTO_DURATION -u $SYNCTO_NB_USERS
