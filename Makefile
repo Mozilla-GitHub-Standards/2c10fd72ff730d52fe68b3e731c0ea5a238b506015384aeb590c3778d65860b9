@@ -48,3 +48,6 @@ docker-run: loadtest.env
 
 configure: build loadtest.env
 	@bash syncto.tpl
+
+export_docker:
+	docker save "syncto/loadtest:latest" | bzip2> syncto-latest.tar.bz2
