@@ -66,7 +66,7 @@ def readonly_crypto():
     r = conn.get('/v1/buckets/syncto/collections/crypto/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(20)
@@ -78,7 +78,7 @@ def readonly_meta():
     r = conn.get('/v1/buckets/syncto/collections/meta/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(20)
@@ -90,7 +90,7 @@ def readonly_bookmarks():
     r = conn.get('/v1/buckets/syncto/collections/bookmarks/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(20)
@@ -102,7 +102,7 @@ def readonly_history():
     r = conn.get('/v1/buckets/syncto/collections/history/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(20)
@@ -114,7 +114,7 @@ def readonly_passwords():
     r = conn.get('/v1/buckets/syncto/collections/passwords/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(30)
