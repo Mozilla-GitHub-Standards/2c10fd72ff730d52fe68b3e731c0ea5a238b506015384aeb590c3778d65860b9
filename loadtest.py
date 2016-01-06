@@ -43,6 +43,13 @@ class SynctoConnection(object):
             headers=self.headers,
             timeout=self.timeout)
 
+    def post(self, endpoint, data):
+        return requests.post(
+            SERVER_URL + endpoint,
+            json=data,
+            headers=self.headers,
+            timeout=self.timeout)
+
     def put(self, endpoint, data):
         return requests.put(
             SERVER_URL + endpoint,
@@ -137,9 +144,43 @@ def write_history():
     r.raise_for_status()
 
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
     # Removing some history
     r = conn.delete('/v1/buckets/syncto/collections/history'
                     '/records/d2X1O6-DyeFS')
+    r.raise_for_status()
+
+
+@scenario(30)
+def batch_write_history():
+    """Adding some history data."""
+    conn = get_connection('user1')
+
+    PAYLOAD = {
+        "ciphertext": ("75IcW3P4WxUJipehWryevc+ygK5vojh3nOadu7YSX9"
+                       "zJSm3eBHu5lNIg1UtDyt3b"),
+        "IV": "Sj3U2Nkk2IjE2S59hv0m7Q==",
+        "hmac": ("c6a530f3486142d1069f80bfaff907e0cc077a892cf7f9bd"
+                 "62f943b68b610351")
+    }
+
+    payload = {"requests": [{
+        "method": "PUT",
+        "path": "/buckets/syncto/collections/history/records/zpbhM1shjTMx",
+        "body": {"data": {"payload": json.dumps(PAYLOAD), "sortindex": 2000}}
+    }]}
+    # Adding some history.
+    r = conn.post('/v1/batch', payload)
+    r.raise_for_status()
+    body = r.json()
+    assert "responses" in body, "responses not found in body"
+    error_msg = "responses length is %d instead of 1" % len(body['responses'])
+    assert len(body['responses']) == 1, error_msg
+    status = body['responses'][0]['status']
+    assert status == 200, "sub request status was %d: %s" % (status, body)
+
+    # Removing some history
+    r = conn.delete('/v1/buckets/syncto/collections/history'
+                    '/records/zpbhM1shjTMx')
     r.raise_for_status()
