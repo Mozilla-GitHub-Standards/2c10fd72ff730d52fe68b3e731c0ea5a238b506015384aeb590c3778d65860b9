@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 
@@ -34,11 +35,18 @@ class SynctoConnection(object):
             "Authorization": "BrowserID %s" % FXA_BROWSERID_ASSERTION,
             "X-Client-State": FXA_CLIENT_STATE
         }
-        self.timeout = 2
+        self.timeout = 300000
 
     def get(self, endpoint):
         return requests.get(
             SERVER_URL + endpoint,
+            headers=self.headers,
+            timeout=self.timeout)
+
+    def post(self, endpoint, data):
+        return requests.post(
+            SERVER_URL + endpoint,
+            json=data,
             headers=self.headers,
             timeout=self.timeout)
 
@@ -65,7 +73,7 @@ def readonly_crypto():
     r = conn.get('/v1/buckets/syncto/collections/crypto/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(20)
@@ -77,7 +85,7 @@ def readonly_meta():
     r = conn.get('/v1/buckets/syncto/collections/meta/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(20)
@@ -89,7 +97,7 @@ def readonly_bookmarks():
     r = conn.get('/v1/buckets/syncto/collections/bookmarks/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(20)
@@ -101,7 +109,7 @@ def readonly_history():
     r = conn.get('/v1/buckets/syncto/collections/history/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
 
 
 @scenario(20)
@@ -113,4 +121,66 @@ def readonly_passwords():
     r = conn.get('/v1/buckets/syncto/collections/passwords/records')
     r.raise_for_status()
     body = r.json()
-    assert "data" in body
+    assert "data" in body, "data not found in body"
+
+
+@scenario(30)
+def write_history():
+    """Adding some history data."""
+    conn = get_connection('user1')
+
+    PAYLOAD = {
+        "ciphertext": ("75IcW3P4WxUJipehWryevc+ygK5vojh3nOadu7YSX9"
+                       "zJSm3eBHu5lNIg1UtDyt3b"),
+        "IV": "Sj3U2Nkk2IjE2S59hv0m7Q==",
+        "hmac": ("c6a530f3486142d1069f80bfaff907e0cc077a892cf7f9bd"
+                 "62f943b68b610351")
+    }
+
+    payload = {"data": {"payload": json.dumps(PAYLOAD), "sortindex": 2000}}
+    # Adding some history.
+    r = conn.put('/v1/buckets/syncto/collections/history/records/d2X1O6-DyeFS',
+                 payload)
+    r.raise_for_status()
+
+    body = r.json()
+    assert "data" in body, "data not found in body"
+
+    # Removing some history
+    r = conn.delete('/v1/buckets/syncto/collections/history'
+                    '/records/d2X1O6-DyeFS')
+    r.raise_for_status()
+
+
+@scenario(30)
+def batch_write_history():
+    """Adding some history data."""
+    conn = get_connection('user1')
+
+    PAYLOAD = {
+        "ciphertext": ("75IcW3P4WxUJipehWryevc+ygK5vojh3nOadu7YSX9"
+                       "zJSm3eBHu5lNIg1UtDyt3b"),
+        "IV": "Sj3U2Nkk2IjE2S59hv0m7Q==",
+        "hmac": ("c6a530f3486142d1069f80bfaff907e0cc077a892cf7f9bd"
+                 "62f943b68b610351")
+    }
+
+    payload = {"requests": [{
+        "method": "PUT",
+        "path": "/buckets/syncto/collections/history/records/zpbhM1shjTMx",
+        "body": {"data": {"payload": json.dumps(PAYLOAD), "sortindex": 2000}}
+    }]}
+    # Adding some history.
+    r = conn.post('/v1/batch', payload)
+    r.raise_for_status()
+    body = r.json()
+    assert "responses" in body, "responses not found in body"
+    error_msg = "responses length is %d instead of 1" % len(body['responses'])
+    assert len(body['responses']) == 1, error_msg
+    status = body['responses'][0]['status']
+    assert status == 200, "sub request status was %d: %s" % (status, body)
+
+    # Removing some history
+    r = conn.delete('/v1/buckets/syncto/collections/history'
+                    '/records/zpbhM1shjTMx')
+    r.raise_for_status()
