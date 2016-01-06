@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 
@@ -34,7 +35,7 @@ class SynctoConnection(object):
             "Authorization": "BrowserID %s" % FXA_BROWSERID_ASSERTION,
             "X-Client-State": FXA_CLIENT_STATE
         }
-        self.timeout = 2
+        self.timeout = 300000
 
     def get(self, endpoint):
         return requests.get(
@@ -114,3 +115,31 @@ def readonly_passwords():
     r.raise_for_status()
     body = r.json()
     assert "data" in body
+
+
+@scenario(30)
+def write_history():
+    """Adding some history data."""
+    conn = get_connection('user1')
+
+    PAYLOAD = {
+        "ciphertext": ("75IcW3P4WxUJipehWryevc+ygK5vojh3nOadu7YSX9"
+                       "zJSm3eBHu5lNIg1UtDyt3b"),
+        "IV": "Sj3U2Nkk2IjE2S59hv0m7Q==",
+        "hmac": ("c6a530f3486142d1069f80bfaff907e0cc077a892cf7f9bd"
+                 "62f943b68b610351")
+    }
+
+    payload = {"data": {"payload": json.dumps(PAYLOAD), "sortindex": 2000}}
+    # Adding some history.
+    r = conn.put('/v1/buckets/syncto/collections/history/records/d2X1O6-DyeFS',
+                 payload)
+    r.raise_for_status()
+
+    body = r.json()
+    assert "data" in body
+
+    # Removing some history
+    r = conn.delete('/v1/buckets/syncto/collections/history'
+                    '/records/d2X1O6-DyeFS')
+    r.raise_for_status()

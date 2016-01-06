@@ -27,7 +27,7 @@ refresh:
 setup_random: refresh loadtest.env
 
 setup_existing:
-	$(BIN)/fxa-client --browserid --auth "$(SYNCTO_EXISTING_EMAIL)" --account-server https://api.accounts.firefox.com/v1 --out loadtest.env
+	$(BIN)/fxa-client --browserid --auth "$(SYNCTO_EXISTING_EMAIL)" --env production --out loadtest.env
 
 
 test: build loadtest.env
