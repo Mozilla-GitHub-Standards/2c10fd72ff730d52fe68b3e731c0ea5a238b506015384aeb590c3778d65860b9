@@ -2,6 +2,9 @@
 
 Syncto loadtest based on ailoads
 
+## Requirements
+
+- Python 3.4
 
 ## How to run the loadtest?
 
