@@ -16,8 +16,7 @@ cat > syncto.json <<EOF
           "instance_region": "us-east-1",
           "instance_type": "m3.large",
           "run_max_time": 300,
-          "container_name": "syncto/loadtest:latest",
-          "container_url": "https://kinto-ota.dev.mozaws.net/loadsv2-images/syncto-latest.tar.bz2",
+          "container_name": "natim/ailoads-syncto:latest",
           "environment_data": [
             "SYNCTO_METRICS_STATSD_SERVER=\$STATSD_HOST:\$STATSD_PORT",
             "SYNCTO_SERVER_URL=https://syncto.stage.mozaws.net:443",

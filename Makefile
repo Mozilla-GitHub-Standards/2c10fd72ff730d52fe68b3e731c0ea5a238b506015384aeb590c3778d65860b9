@@ -44,10 +44,10 @@ docker-build:
 	docker build -t syncto/loadtest .
 
 docker-run: loadtest.env
-	bash -c "source loadtest.env && docker run -e SYNCTO_DURATION=600 -e SYNCTO_NB_USERS=10 -e SYNCTO_SERVER_URL=$(SYNCTO_SERVER_URL) -e FXA_BROWSERID_ASSERTION=$${FXA_BROWSERID_ASSERTION} -e FXA_CLIENT_STATE=$${FXA_CLIENT_STATE} syncto/loadtest"
+	bash -c "source loadtest.env; docker run -e SYNCTO_DURATION=600 -e SYNCTO_NB_USERS=10 -e SYNCTO_SERVER_URL=$(SYNCTO_SERVER_URL) -e FXA_BROWSERID_ASSERTION=\$${FXA_BROWSERID_ASSERTION} -e FXA_CLIENT_STATE=\$${FXA_CLIENT_STATE} syncto/loadtest"
 
 configure: build loadtest.env
 	@bash syncto.tpl
 
-export_docker:
+docker-export:
 	docker save "syncto/loadtest:latest" | bzip2> syncto-latest.tar.bz2
